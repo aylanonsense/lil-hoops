@@ -1,2 +1,2 @@
-# lil-physics
-A lil game with that FANCY physics the kids are all on about these days.
+# lil-hoops
+A lil hoop-shootin' game with those FANCY physics the kids are all on about these days.
