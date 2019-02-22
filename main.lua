@@ -1,7 +1,7 @@
 -- Render constants
 local GAME_WIDTH = 200
 local GAME_HEIGHT = 200
-local RENDER_SCALE = 1
+local RENDER_SCALE = 3
 local DRAW_PHYSICS_OBJECTS = false
 
 -- Game constants
