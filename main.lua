@@ -1,6 +1,6 @@
 -- Render constants
-local GAME_WIDTH = 200
-local GAME_HEIGHT = 200
+local GAME_WIDTH = 192
+local GAME_HEIGHT = 192
 local RENDER_SCALE = 3
 local DRAW_PHYSICS_OBJECTS = false
 
@@ -10,26 +10,22 @@ local SHOT_Y = 140
 local BALL_BOUNCINESS = 0.7
 local GRAVITY = 200
 
--- Game vars
+-- Game variables
+local world
+local ball
+local hoop
+local backboard
+local flashes
 local shotStep
 local shotTimer
 local shotAngle
 local shotPower
 local celebrationTimer
 
--- Game objects
-local world
-local ball
-local hoop
-local backboard
-local flashes
-
--- Images
+-- Assets
 local ballImage
 local hoopImage
 local flashImage
-
--- Sound effects
 local aimSound
 local powerSound
 local shootSound
@@ -38,22 +34,20 @@ local flashSound
 
 -- Initializes the game
 function love.load()
-  -- Load images
+  -- Load assets
   ballImage = love.graphics.newImage('img/ball.png')
   hoopImage = love.graphics.newImage('img/hoop.png')
   flashImage = love.graphics.newImage('img/flash.png')
   ballImage:setFilter('nearest', 'nearest')
   hoopImage:setFilter('nearest', 'nearest')
   flashImage:setFilter('nearest', 'nearest')
-
-  -- Load sound effects
   aimSound = love.audio.newSource('sfx/aim.wav', 'static')
   powerSound = love.audio.newSource('sfx/power.wav', 'static')
   shootSound = love.audio.newSource('sfx/shoot.wav', 'static')
   bounceSound = love.audio.newSource('sfx/bounce.wav', 'static')
   flashSound = love.audio.newSource('sfx/flash.wav', 'static')
 
-  -- Initialize game vars
+  -- Initialize game variables
   shotStep = 'aim'
   shotTimer = 0.00
   shotAngle = 0
@@ -69,14 +63,14 @@ function love.load()
   ball = createCircle(SHOT_X, SHOT_Y, 8)
   ball.fixture:setRestitution(BALL_BOUNCINESS)
 
-  -- Create the hoop (it's actually just two static circles, one for each side of the rung)
+  -- Create the hoop (it's actually just two static circles, one for each side of the hoop)
   hoop = {
-    createCircle(147, 82, 2, true),
-    createCircle(171, 82, 2, true)
+    createCircle(139, 82, 2, true),
+    createCircle(163, 82, 2, true)
   }
 
-  -- Create the static backboard
-  backboard = createRectangle(178, 65, 5, 50, true)
+  -- Create the backboard
+  backboard = createRectangle(170, 65, 5, 50, true)
 
   -- Create an empty array for camera flashes
   flashes = {}
@@ -84,6 +78,7 @@ end
 
 -- Updates the game state
 function love.update(dt)
+  -- Update timers
   shotTimer = shotTimer + dt
   celebrationTimer = math.max(0.00, celebrationTimer - dt)
 
@@ -106,7 +101,7 @@ function love.update(dt)
     end
   end
 
-  -- Keep the ball in once place until it's been shot
+  -- Keep the ball in one place until it's been shot
   if shotStep ~= 'shoot' then
     ball.body:setPosition(SHOT_X, SHOT_Y)
     ball.body:setLinearVelocity(0, 0)
@@ -138,16 +133,14 @@ end
 
 -- Renders the game
 function love.draw()
-  -- Scale up the screen
+  -- Scale and crop the screen
+  love.graphics.setScissor(0, 0, RENDER_SCALE * GAME_WIDTH, RENDER_SCALE * GAME_HEIGHT)
   love.graphics.scale(RENDER_SCALE, RENDER_SCALE)
-
-  -- Clear the screen
   if celebrationTimer > 0.00 then
-    love.graphics.setColor(251 / 255, 162 / 255, 26 / 255)
+    love.graphics.clear(253 / 255, 217 / 255, 37 / 255)
   else
-    love.graphics.setColor(252 / 255, 147 / 255, 1 / 255)
+    love.graphics.clear(252 / 255, 147 / 255, 1 / 255)
   end
-  love.graphics.rectangle('fill', 0, 0, GAME_WIDTH, GAME_HEIGHT)
   love.graphics.setColor(1, 1, 1)
 
   -- Draw the camera flashes
@@ -161,11 +154,11 @@ function love.draw()
   love.graphics.draw(ballImage, ball.body:getX() - 8, ball.body:getY() - 8)
 
   -- Draw the hoop
-  love.graphics.draw(hoopImage, 146, 40)
+  love.graphics.draw(hoopImage, 138, 40)
 
   -- Draw aiming reticle
   if shotStep ~= 'shoot' then
-    love.graphics.setColor(0, 0, 0)
+    love.graphics.setColor(91 / 255, 20 / 255, 3 / 255)
     local increment = 5 + 8 * shotPower
     for dist = 8 + increment, 8 + 5 * increment, increment do
       love.graphics.rectangle('fill', SHOT_X + math.cos(shotAngle) * dist - 1, SHOT_Y + math.sin(shotAngle) * dist - 1, 2, 2)
