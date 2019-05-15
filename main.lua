@@ -1,10 +1,7 @@
--- Render constants
+-- Game constants
+local DRAW_PHYSICS_OBJECTS = false
 local GAME_WIDTH = 192
 local GAME_HEIGHT = 192
-local RENDER_SCALE = 3
-local DRAW_PHYSICS_OBJECTS = false
-
--- Game constants
 local SHOT_X = 25
 local SHOT_Y = 140
 local BALL_BOUNCINESS = 0.7
@@ -133,9 +130,7 @@ end
 
 -- Renders the game
 function love.draw()
-  -- Scale and crop the screen
-  love.graphics.setScissor(0, 0, RENDER_SCALE * GAME_WIDTH, RENDER_SCALE * GAME_HEIGHT)
-  love.graphics.scale(RENDER_SCALE, RENDER_SCALE)
+  -- Clear the screen
   if celebrationTimer > 0.00 then
     love.graphics.clear(253 / 255, 217 / 255, 37 / 255)
   else
