@@ -4,6 +4,6 @@ name: lil hoops
 username: bridgs
 primaryColor: FC9301
 coverImage: cover-image.png
-description: A lil hoop-shootin' game with those FANCY physics the kids are all on about these days.
+description: A great introduction to rigid-body physics. Shoot some hoops and make it your own!
 dimensions: 192x192
 scaling: step
